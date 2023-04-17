@@ -56,26 +56,26 @@ AudioSampler() # Start the program
 
 
 ##########Main Program
-class Noise:
-    def __init__(self, sound):
-        self.sound = [0,1023]
-    #getters and setters
-    @property
-    def sound(self):
-        return self._sound
-    @sound.setter
-    def sound(self, value):
-        self._sound = value
+#class Noise:
+#    def __init__(self, sound):
+#        self.sound = [0,1023]
+   #getters and setters
+#    @property
+#    def sound(self):
+#        return self._sound
+#    @sound.setter
+#    def sound(self, value):
+ #       self._sound = value
         
-    def average(self):
+#    def average(self):
         (self.sound)/AudioSampler(Audio)
-while(True):
-    counter = 0
-    if Noise()>number:
-        counter += 1
-        if counter == 3:
-            GPIO output
-            counter == 0
+#while(True):
+#    counter = 0
+#    if Noise()>number:
+#        counter += 1
+#        if counter == 3:
+ #           GPIO output
+ #           counter == 0
     
 
 
