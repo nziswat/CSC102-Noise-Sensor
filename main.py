@@ -35,9 +35,9 @@ def AudioSampler(Audio): #Samples the audio and proceeds to integrate the last 2
         
 def Infraction(): #TODO, keeps a tally of the amount of infractions that has accumulated. 
         AlterCounter.number += 1
-        if AlterCounter.number = 3:
+        if AlterCounter.number == 3:
             LEDIndicator()
-        if AlterCounter.number = 5:
+        if AlterCounter.number == 5:
             NoiseMaker()
             
             
