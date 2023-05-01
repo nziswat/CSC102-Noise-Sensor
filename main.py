@@ -8,7 +8,7 @@
 ##Using the now digital input, throw it into the AudioSampler
 
 import RPi.GPIO as GPIO
-
+import time
 ###Set GPIOs slots below
 VolIn = 24 #VOLume IN. Inputted from the ADC
 
@@ -56,26 +56,18 @@ AudioSampler() # Start the program
 
 
 ##########Main Program
-#class Noise:
-#    def __init__(self, sound):
-#        self.sound = [0,1023]
-   #getters and setters
-#    @property
-#    def sound(self):
-#        return self._sound
-#    @sound.setter
-#    def sound(self, value):
- #       self._sound = value
-        
-#    def average(self):
-        (self.sound)/AudioSampler(Audio)
-#while(True):
-#    counter = 0
-#    if Noise()>number:
-#        counter += 1
-#        if counter == 3:
- #           GPIO output
- #           counter == 0
+#averages a number for every third second
+def average(time):
+    start_time = time.time()
+    count = 0
+    total = 0
     
-
-
+    while (time.time() - start_time) < time:
+        count += 1
+        total += count
+        
+        if count % 3 == 0:
+            average = total / count
+            print(f"Average at {count} seconds: {average}")
+        
+        time.sleep(1)
