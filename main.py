@@ -1,57 +1,112 @@
 ############
 ### The main code for the microphone and GPIO interface
-# TBD = To be Determined
 
-
-##TODO:
-##Properly map the analog input of the speaker to the full range of the ADC
-##Using the now digital input, throw it into the AudioSampler
 
 import RPi.GPIO as GPIO
+import busio
+import digitalio
+import board
+import adafruit_mcp3xxx.mcp3008 as MCP
+from adafruit_mcp3xxx.analog_in import AnalogIn
+import time
 
-###Set GPIOs slots below
-VolIn = 24 #VOLume IN. Inputted from the ADC
+#tell GPIO What mode to use
+GPIO.setmode(GPIO.BCM)
 
-class InfractionCounter(): #A class that keeps track of the Infractions.
-    def __init__(self,number=0):
-        self.number = number
-        ##TODO fill in the rest of this with proper getters and setters
+# create the spi bus
+spi = busio.SPI(clock=board.SCLK, MISO=board.MISO, MOSI=board.MOSI)
+
+# create the cs (chip select)
+cs = digitalio.DigitalInOut(board.CE0)
+
+# designate the GPIO output for the beeper device.
+beeper = 13
+GPIO.setup(beeper, GPIO.OUT)
+
+# create the mcp object
+mcp = MCP.MCP3008(spi, cs)
+
+# create an analog input channel on pin 0
+chan = AnalogIn(mcp, MCP.P0)
+chan2 = AnalogIn(mcp, MCP.P1)
 
 
-def AudioSampler(Audio): #Samples the audio and proceeds to integrate the last 2 seconds.
-    buffer = 2000 #TBD
-    result = 1.0
-    samples = []
-    while True:
-        while buffer > 0:
-            samples.append(Audio)
-        samples.append(Audio)
-        samples.pop(0)
-        result = (sum(samples) / (len(samples)))
-        if result > 2222: #TBD
-            Infraction()
-        else:pass
+
+#while True:
+#    print (chan.value)                                                              
+
+
+
+##########Main Program
+#averages a number for every third second
+
+
+
+class MainSystem():
+
+    infractions = 0
+    lastsecond = []
+    def __init__(self):
+        pass
+
+
+
+    def AudioSampler(self): #Samples the audio and proceeds to integrate the last second or so.
+        return (sum(self.lastsecond)/len(self.lastsecond))
+
+    def noiseMaker():
+        GPIO.output(beeper, GPIO.HIGH)
+        time.sleep(0.25)
+        GPIO.output(beeper, GPIO.LOW)
+        time.sleep(0.25)
+
+        GPIO.output(beeper, GPIO.HIGH)
+        time.sleep(0.25)
+        GPIO.output(beeper, GPIO.LOW)
+        time.sleep(0.25)
+
+        GPIO.output(beeper, GPIO.HIGH)
+        time.sleep(0.25)
+        GPIO.output(beeper, GPIO.LOW)
+        time.sleep(0.25)
+
+
+
+
+    def noiseMakerSuper():
+        GPIO.output(beeper, GPIO.HIGH)
+        time.sleep(3)
+        GPIO.output(beeper, GPIO.LOW)
+
+
+
         
-def Infraction(): #TODO, keeps a tally of the amount of infractions that has accumulated. 
-        AlterCounter.number += 1
-        if AlterCounter.number = 3:
-            LEDIndicator()
-        if AlterCounter.number = 5:
-            NoiseMaker()
+    def Infraction(self): #TODO, keeps a tally of the amount of infractions that has accumulated. 
+        self.infractions += 1
+        if self.infractions == 3:
+            self.noiseMaker()
+        if self.infractions == 5:
+            self.noiseMakerSuper()
             
             
-def LEDIndicator(): ##TODO: Trigger the LED. Maybe make it flash
-    pass
 
-def NoiseMaker(): ##TODO: Trigger the Noise Maker
-    pass
         
         
-AlertCounter = InfractionCounter() #Make the Counter Object
+System = MainSystem() #Make the Counter Object
     
             
-        
-AudioSampler() # Start the program
+while True:
+
+    System.lastsecond.append(chan.value)
     
+    if len(System.lastsecond) > 1000:
+        audioCheck = System.AudioSampler()
+        print (audioCheck)
+        if audioCheck > 5000:
+            System.Infraction()
+        System.lastsecond.clear()
+
+
+
     
     
